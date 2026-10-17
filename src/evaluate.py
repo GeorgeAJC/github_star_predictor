@@ -88,7 +88,7 @@ def plot_learning_curve(model, X_train, y_train):
     plt.fill_between(train_sizes, validation_mean - validation_std, validation_mean + validation_std, color='darkorange', alpha=0.1)
     
     plt.xlabel("Training Set Size")
-    plt.ylabel("R² Score")
+    plt.ylabel("R2 Score")
     plt.title("Model Learning Curve (Overfitting & Generalization)")
     plt.legend(loc="best")
     plt.grid(True, alpha=0.3)

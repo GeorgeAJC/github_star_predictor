@@ -7,6 +7,7 @@ from sklearn.ensemble import GradientBoostingRegressor, StackingRegressor, Rando
 from sklearn.linear_model import Ridge, Lasso
 from sklearn.svm import SVR
 from sklearn.neighbors import KNeighborsRegressor
+import warnings
 
 def tune_hyperparameters(X_train, y_train, numeric_features, categorical_features):
 
@@ -36,8 +37,8 @@ def tune_hyperparameters(X_train, y_train, numeric_features, categorical_feature
 
     param_grid = [  
         {
-            'preprocessor_num_scaler': [StandardScaler()],
-            'preprocessor_cat_encoder': [
+            'preprocessor__num__scaler': [StandardScaler()],
+            'preprocessor__cat__encoder': [
                 OneHotEncoder(handle_unknown='ignore', sparse_output=False),
                 OneHotEncoder(handle_unknown='ignore', sparse_output=False, drop='first')
             ],'model': [GradientBoostingRegressor(random_state=42)],
@@ -46,8 +47,8 @@ def tune_hyperparameters(X_train, y_train, numeric_features, categorical_feature
             'model__max_depth': [3, 5]
         },
         {
-            'preprocessor_num_scaler': [StandardScaler()],
-            'preprocessor_cat_encoder': [
+            'preprocessor__num__scaler': [StandardScaler()],
+            'preprocessor__cat__encoder': [
                 OneHotEncoder(handle_unknown='ignore', sparse_output=False),
                 OneHotEncoder(handle_unknown='ignore', sparse_output=False, drop='first')
             ],'model': [RandomForestRegressor(random_state=42)],
@@ -55,8 +56,8 @@ def tune_hyperparameters(X_train, y_train, numeric_features, categorical_feature
             'model__max_depth': [10, 20]
         },
         {
-            'preprocessor_num_scaler': [StandardScaler()],
-            'preprocessor_cat_encoder': [
+            'preprocessor__num__scaler': [StandardScaler()],
+            'preprocessor__cat__encoder': [
                 OneHotEncoder(handle_unknown='ignore', sparse_output=False),
                 OneHotEncoder(handle_unknown='ignore', sparse_output=False, drop='first') 
             ],'model': [StackingRegressor(
@@ -70,8 +71,8 @@ def tune_hyperparameters(X_train, y_train, numeric_features, categorical_feature
             'model__final_estimator__alpha': [0.1, 1.0]
         },
         {
-            'preprocessor_num_scaler': [StandardScaler()],
-            'preprocessor_cat_encoder': [
+            'preprocessor__num__scaler': [StandardScaler()],
+            'preprocessor__cat__encoder': [
                 OneHotEncoder(handle_unknown='ignore', sparse_output=False),
                 OneHotEncoder(handle_unknown='ignore', sparse_output=False, drop='first')
             ],
@@ -85,8 +86,8 @@ def tune_hyperparameters(X_train, y_train, numeric_features, categorical_feature
             'model__final_estimator__n_estimators': [50, 100]
         },
         {
-            'preprocessor_num_scaler': [StandardScaler()],
-            'preprocessor_cat_encoder': [
+            'preprocessor__num__scaler': [StandardScaler()],
+            'preprocessor__cat__encoder': [
                 OneHotEncoder(handle_unknown='ignore', sparse_output=False),
                 OneHotEncoder(handle_unknown='ignore', sparse_output=False, drop='first')
             ],
@@ -111,7 +112,9 @@ def tune_hyperparameters(X_train, y_train, numeric_features, categorical_feature
         cv=5,
         scoring='r2',
         n_jobs=-1,
+        verbose=2
     )
+    warnings.filterwarnings("ignore", message="Found unknown categories")
     
     print("Running GridSearchCV...")
     grid_search_cv.fit(X_train, y_train)
