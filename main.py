@@ -4,14 +4,14 @@ from src.tune import tune_hyperparameters
 from src.evaluate import run_full_evaluation
 from src.data_cleaning import load_and_clean_data
 
-def main():
+def main(retrain=False):
     print("Loading data...")
     X_train, X_test, y_train, y_test, numeric_features, categorical_features = load_and_clean_data("data/github_repos_dataset.csv")
 
     best_model_path = "models/best_pipeline.pkl"
     os.makedirs("models", exist_ok=True)
     
-    if os.path.exists(best_model_path):
+    if os.path.exists(best_model_path) and not retrain:
         print(f"Loading model from {best_model_path}...")
         best_model = joblib.load(best_model_path)
     else:
@@ -26,5 +26,5 @@ def main():
     )
 
 if __name__ == "__main__":
-    main()
+    main(True)
  
