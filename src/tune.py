@@ -70,7 +70,6 @@ def tune_hyperparameters(X_train, y_train, numeric_features, categorical_feature
             )],
             'model__ridge__alpha': [1.0, 10.0],
             'model__svr__C': [10.0, 100.0],
-            'model__epsilon': [0.01, 0.1, 0.2],
             'model__final_estimator__alpha': [1.0, 10.0]
         },
         {
