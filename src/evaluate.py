@@ -60,7 +60,7 @@ def plot_scatter_comparison(baseline_pipeline, best_model, X_test, y_test):
     
     plt.suptitle("Baseline vs. Tuned Model Performance", fontsize=14)
     plt.tight_layout()
-    plt.savefig("models/scatter_comparison.png")
+    plt.savefig(f"models/scatter_comparison_{best_model.score(X_test, y_test):.4f}.png")
     print("Saved image in models/")
     plt.show()
 
@@ -92,7 +92,7 @@ def plot_learning_curve(model, X_train, y_train):
     plt.title("Model Learning Curve (Overfitting & Generalization)")
     plt.legend(loc="best")
     plt.grid(True, alpha=0.3)
-    plt.savefig("models/learning_curve.png")
+    plt.savefig(f"models/learning_curve_{model.score(X_test, y_test):.4f}.png")
     print("Saved in models/")
     plt.show()
 
