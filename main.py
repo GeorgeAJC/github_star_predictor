@@ -17,7 +17,7 @@ def main(retrain=False):
     else:
         print("Training new model via GridSearchCV...")
         trained_model = tune_hyperparameters(X_train, y_train, numeric_features, categorical_features)
-        trained_model_path = f"models/trained_model_{trained_model.score(X_test, y_test)}.pkl"
+        trained_model_path = f"models/trained_model_{trained_model.score(X_test, y_test):.4f}.pkl"
         joblib.dump(trained_model, trained_model_path)
         print(f"Model saved to {trained_model_path}")
 
