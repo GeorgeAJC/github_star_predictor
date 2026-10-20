@@ -31,7 +31,7 @@ def run_full_evaluation(best_model, X_train, y_train, X_test, y_test, numeric_fe
 
     #graphs
     plot_scatter_comparison(baseline_pipeline, best_model, X_test, y_test)
-    plot_learning_curve(best_model, X_train, y_train)
+    plot_learning_curve(best_model, X_train, y_train, X_test, y_test)
 
 
 def plot_scatter_comparison(baseline_pipeline, best_model, X_test, y_test):
