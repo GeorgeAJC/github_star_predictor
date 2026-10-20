@@ -42,9 +42,9 @@ def tune_hyperparameters(X_train, y_train, numeric_features, categorical_feature
                 OneHotEncoder(handle_unknown='ignore', sparse_output=False),
                 OneHotEncoder(handle_unknown='ignore', sparse_output=False, drop='first')
             ],'model': [GradientBoostingRegressor(random_state=42)],
-            'model__n_estimators': [20, 80],
+            'model__n_estimators': [100, 500],
             'model__learning_rate': [0.05, 0.1],
-            'model__max_depth': [2, 4]
+            'model__max_depth': [5, 8]
         },
         {
             'preprocessor__num__scaler': [StandardScaler()],
@@ -52,10 +52,10 @@ def tune_hyperparameters(X_train, y_train, numeric_features, categorical_feature
                 OneHotEncoder(handle_unknown='ignore', sparse_output=False),
                 OneHotEncoder(handle_unknown='ignore', sparse_output=False, drop='first')
             ],'model': [RandomForestRegressor(random_state=42)],
-            'model__n_estimators': [20, 80],
-            'model__max_depth': [2, 4],
-            'model__min_samples_split': [2, 5],
-            'model__min_samples_leaf': [1, 3]
+            'model__n_estimators': [100, 500],
+            'model__max_depth': [5, 8],
+            'model__min_samples_split': [5, 10],
+            'model__min_samples_leaf': [5, 10]
         },
         {
             'preprocessor__num__scaler': [StandardScaler()],
@@ -68,9 +68,9 @@ def tune_hyperparameters(X_train, y_train, numeric_features, categorical_feature
                     ('svr', SVR())
                 ],final_estimator=Ridge()
             )],
-            'model__ridge__alpha': [0.05, 0.5],
-            'model__svr__C': [0.5, 5.0],
-            'model__final_estimator__alpha': [0.05, 0.5]
+            'model__ridge__alpha': [1, 5],
+            'model__svr__C': [0.1, 1.0],
+            'model__final_estimator__alpha': [0.1, 1.0]
         },
         {
             'preprocessor__num__scaler': [StandardScaler()],
@@ -83,9 +83,9 @@ def tune_hyperparameters(X_train, y_train, numeric_features, categorical_feature
                     ('rf', RandomForestRegressor(random_state=42)), 
                     ('knn', KNeighborsRegressor())
                 ],final_estimator=GradientBoostingRegressor(random_state=42)
-            )],'model__rf__n_estimators': [20, 80],
-            'model__knn__n_neighbors': [2, 4, 6],
-            'model__final_estimator__n_estimators': [20, 80]
+            )],'model__rf__n_estimators': [100, 500],
+            'model__knn__n_neighbors': [5, 10, 25],
+            'model__final_estimator__n_estimators': [100, 500]
         },
         {
             'preprocessor__num__scaler': [StandardScaler()],
@@ -101,10 +101,10 @@ def tune_hyperparameters(X_train, y_train, numeric_features, categorical_feature
                     )),
                     ('knn', KNeighborsRegressor())
                 ],final_estimator=Lasso()
-            )],'model__inner_stack__ridge__alpha': [0.05, 0.5],
-            'model__inner_stack__final_estimator__n_estimators': [20, 80],
-            'model__knn__n_neighbors': [2, 4, 6],
-            'model__final_estimator__alpha': [0.05, 0.5]
+            )],'model__inner_stack__ridge__alpha': [0.1, 1.0],
+            'model__inner_stack__final_estimator__n_estimators': [100, 500],
+            'model__knn__n_neighbors': [5, 10, 25],
+            'model__final_estimator__alpha': [0.1, 1.0]
         }
     ]
     
