@@ -64,7 +64,7 @@ def plot_scatter_comparison(baseline_pipeline, best_model, X_test, y_test):
     print("Saved image in models/")
     plt.show()
 
-def plot_learning_curve(model, X_train, y_train):
+def plot_learning_curve(model, X_train, y_train, X_test, y_test):
 
     print("Generating learning curve line graph...")
     
