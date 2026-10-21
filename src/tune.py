@@ -8,6 +8,7 @@ from sklearn.linear_model import Ridge, Lasso
 from sklearn.svm import SVR
 from sklearn.neighbors import KNeighborsRegressor
 import warnings
+from xgboost import XGBRegressor
 
 def tune_hyperparameters(X_train, y_train, numeric_features, categorical_features):
 
@@ -38,8 +39,7 @@ def tune_hyperparameters(X_train, y_train, numeric_features, categorical_feature
     param_grid = [  
         {
             'preprocessor__num__scaler': [StandardScaler()],
-            'preprocessor__cat__encoder': [
-                OneHotEncoder(handle_unknown='ignore', sparse_output=False),
+            'preprocessor__cat__encoder': [OneHotEncoder(handle_unknown='ignore', sparse_output=False),
                 OneHotEncoder(handle_unknown='ignore', sparse_output=False, drop='first')
             ],'model': [GradientBoostingRegressor(random_state=42)],
             'model__n_estimators': [100, 500],
@@ -48,8 +48,7 @@ def tune_hyperparameters(X_train, y_train, numeric_features, categorical_feature
         },
         {
             'preprocessor__num__scaler': [StandardScaler()],
-            'preprocessor__cat__encoder': [
-                OneHotEncoder(handle_unknown='ignore', sparse_output=False),
+            'preprocessor__cat__encoder': [OneHotEncoder(handle_unknown='ignore', sparse_output=False),
                 OneHotEncoder(handle_unknown='ignore', sparse_output=False, drop='first')
             ],'model': [RandomForestRegressor(random_state=42)],
             'model__n_estimators': [100, 500],
@@ -59,8 +58,7 @@ def tune_hyperparameters(X_train, y_train, numeric_features, categorical_feature
         },
         {
             'preprocessor__num__scaler': [StandardScaler()],
-            'preprocessor__cat__encoder': [
-                OneHotEncoder(handle_unknown='ignore', sparse_output=False),
+            'preprocessor__cat__encoder': [OneHotEncoder(handle_unknown='ignore', sparse_output=False),
                 OneHotEncoder(handle_unknown='ignore', sparse_output=False, drop='first') 
             ],'model': [StackingRegressor(
                 estimators=[
@@ -74,8 +72,7 @@ def tune_hyperparameters(X_train, y_train, numeric_features, categorical_feature
         },
         {
             'preprocessor__num__scaler': [StandardScaler()],
-            'preprocessor__cat__encoder': [
-                OneHotEncoder(handle_unknown='ignore', sparse_output=False),
+            'preprocessor__cat__encoder': [OneHotEncoder(handle_unknown='ignore', sparse_output=False),
                 OneHotEncoder(handle_unknown='ignore', sparse_output=False, drop='first')
             ],
             'model': [StackingRegressor(
@@ -89,23 +86,17 @@ def tune_hyperparameters(X_train, y_train, numeric_features, categorical_feature
         },
         {
             'preprocessor__num__scaler': [StandardScaler()],
-            'preprocessor__cat__encoder': [
-                OneHotEncoder(handle_unknown='ignore', sparse_output=False),
+            'preprocessor__cat__encoder': [OneHotEncoder(handle_unknown='ignore', sparse_output=False),
                 OneHotEncoder(handle_unknown='ignore', sparse_output=False, drop='first')
             ],
-            'model': [StackingRegressor(
-                estimators=[
-                    ('inner_stack', StackingRegressor(
-                        estimators=[('ridge', Ridge()), ('svr', SVR())],
-                        final_estimator=RandomForestRegressor(random_state=42)
-                    )),
-                    ('knn', KNeighborsRegressor())
-                ],final_estimator=Lasso()
-            )],'model__inner_stack__ridge__alpha': [0.1, 1.0],
-            'model__inner_stack__final_estimator__n_estimators': [100, 500],
-            'model__knn__n_neighbors': [5, 10, 25],
-            'model__final_estimator__alpha': [0.1, 1.0]
-        }
+            'model': [XGBRegressor(random_state=42)],
+            'model__n_estimators': [100, 500],
+            'model__max_depth': [5, 8],
+            'model__subsample': [0.8, 1.0],         
+            'model__reg_alpha': [0, 0.5, 1.0],      #l1
+            'model__reg_lambda': [1.0, 5.0, 10.0]   #l2
+        },
+        
     ]
     
     grid_search_cv = GridSearchCV(
