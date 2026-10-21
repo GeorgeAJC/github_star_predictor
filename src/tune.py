@@ -47,21 +47,21 @@ def tune_hyperparameters(X_train, y_train, numeric_features, categorical_feature
             'regressor__preprocessor__cat__encoder': [OneHotEncoder(handle_unknown='ignore', sparse_output=False),
                 OneHotEncoder(handle_unknown='ignore', sparse_output=False, drop='first')
             ],'regressor__model': [GradientBoostingRegressor(random_state=42)],
-            'regressor__model__n_estimators': [200, 400],
-            'regressor__model__learning_rate': [0.05, 0.1],
+            'regressor__model__n_estimators': [200, 400, 600],
+            'regressor__model__learning_rate': [0.02, 0.04],
             'regressor__model__max_depth': [3, 5],
             'regressor__model__subsample': [0.8, 1.0],
-            'regressor__model__min_samples_leaf': [10, 20],
+            'regressor__model__min_samples_leaf': [20, 30, 50],
         },
         {
             'regressor__preprocessor__num__scaler': [StandardScaler()],
             'regressor__preprocessor__cat__encoder': [OneHotEncoder(handle_unknown='ignore', sparse_output=False),
                 OneHotEncoder(handle_unknown='ignore', sparse_output=False, drop='first')
             ],'regressor__model': [RandomForestRegressor(random_state=42)],
-            'regressor__model__n_estimators': [200, 400],
+            'regressor__model__n_estimators': [200, 400, 600],
             'regressor__model__max_depth': [3, 5, 10],
             'regressor__model__min_samples_split': [10, 15, 20],
-            'regressor__model__min_samples_leaf': [10, 20]
+            'regressor__model__min_samples_leaf': [10, 20, 30]
         },
         {
             'regressor__preprocessor__num__scaler': [StandardScaler()],
@@ -89,7 +89,7 @@ def tune_hyperparameters(X_train, y_train, numeric_features, categorical_feature
                 ],final_estimator=GradientBoostingRegressor(random_state=42)
             )],'regressor__model__rf__n_estimators': [200, 400],
             'regressor__model__knn__n_neighbors': [5, 10, 25],
-            'regressor__model__final_estimator__n_estimators': [100, 200]
+            'regressor__model__final_estimator__n_estimators': [200, 400]
         },
         {
             'regressor__preprocessor__num__scaler': [StandardScaler()],
@@ -98,11 +98,13 @@ def tune_hyperparameters(X_train, y_train, numeric_features, categorical_feature
             ],
             'regressor__model': [XGBRegressor(random_state=42)],
             'regressor__model__n_estimators': [200, 400],
+            'regressor__model__colsample_bytree': [0.6,0.8, 1.0],
             'regressor__model__max_depth': [3, 5],
             'regressor__model__subsample': [0.8, 1.0],
             'regressor__model__learning_rate': [0.05, 0.1],       
-            'regressor__model__reg_alpha': [0.5, 1.0],      #l1
-            'regressor__model__reg_lambda': [1.0, 5.0, 10.0]   #l2
+            'regressor__model__reg_alpha': [0.5, 1.0],      
+            'regressor__model__reg_lambda': [1.0, 5.0, 10.0],
+            'regressor__model__reg_gamma': [1.0, 5.0]
         }
         
     ]
