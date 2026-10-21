@@ -3,7 +3,7 @@ import time
 import requests
 import pandas as pd
 
-def fetch_github_dataset(target_count=10000):
+def fetch_github_dataset(target_count=20000):
     url = "https://api.github.com/search/repositories"
     headers = {"Accept": "application/vnd.github+json"}
     
@@ -21,7 +21,7 @@ def fetch_github_dataset(target_count=10000):
         end_date = date_ranges[i+1].strftime("%Y-%m-%d")
         
         page = 1
-        while page <= 10:  # Max 10 pages per query (1,000 results per time slice totalling 10,000 results)
+        while page <= 20:  # Max 20 pages per query (1,000 results per time slice totalling 20,000 results)
             query = f"created:{start_date}..{end_date} stars:>5"
             params = {"q": query, "sort": "stars", "order": "desc", "per_page": 100, "page": page}
             
@@ -61,7 +61,7 @@ def fetch_github_dataset(target_count=10000):
     if not df.empty:
         df = df.head(target_count)
         os.makedirs("data", exist_ok=True)
-        file_path = "data/github_repos_dataset.csv"
+        file_path = "data/github_repos_dataset_20k.csv"
         df.to_csv(file_path, index=False)
         print(f"Successfully fetched and saved data to {file_path}")
     else:
@@ -69,4 +69,4 @@ def fetch_github_dataset(target_count=10000):
     return df
 
 if __name__ == "__main__":
-    fetch_github_dataset(target_count=10000)
+    fetch_github_dataset(target_count=20000)
