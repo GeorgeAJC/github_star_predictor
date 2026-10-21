@@ -48,10 +48,10 @@ def tune_hyperparameters(X_train, y_train, numeric_features, categorical_feature
                 OneHotEncoder(handle_unknown='ignore', sparse_output=False, drop='first')
             ],'regressor__model': [GradientBoostingRegressor(random_state=42)],
             'regressor__model__n_estimators': [200, 400, 600],
-            'regressor__model__learning_rate': [0.02, 0.04],
-            'regressor__model__max_depth': [3, 5],
+            'regressor__model__learning_rate': [0.03, 0.05],
+            'regressor__model__max_depth': [5, 7],
             'regressor__model__subsample': [0.8, 1.0],
-            'regressor__model__min_samples_leaf': [20, 30, 50],
+            'regressor__model__min_samples_leaf': [10, 15, 20],
         },
         {
             'regressor__preprocessor__num__scaler': [StandardScaler()],
