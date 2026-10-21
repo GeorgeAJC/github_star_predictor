@@ -92,10 +92,11 @@ def tune_hyperparameters(X_train, y_train, numeric_features, categorical_feature
             'model': [XGBRegressor(random_state=42)],
             'model__n_estimators': [100, 500],
             'model__max_depth': [5, 8],
-            'model__subsample': [0.8, 1.0],         
+            'model__subsample': [0.8, 1.0],
+            'model__learning_rate': [0.05, 0.1],       
             'model__reg_alpha': [0, 0.5, 1.0],      #l1
             'model__reg_lambda': [1.0, 5.0, 10.0]   #l2
-        },
+        }
         
     ]
     
