@@ -6,7 +6,7 @@ from src.data_cleaning import load_and_clean_data
 
 def main(retrain=False):
     print("Loading data...")
-    X_train, X_test, y_train, y_test, numeric_features, categorical_features = load_and_clean_data("data/github_repos_dataset.csv")
+    X_train, X_test, y_train, y_test, numeric_features, categorical_features = load_and_clean_data("data/github_repos_dataset_20k.csv")
 
     best_model_path = "models/best_pipeline.pkl"
     os.makedirs("models", exist_ok=True)
