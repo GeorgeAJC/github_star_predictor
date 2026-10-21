@@ -1,14 +1,15 @@
 from sklearn.model_selection import GridSearchCV
 from sklearn.pipeline import Pipeline
-from sklearn.compose import ColumnTransformer
+from sklearn.compose import ColumnTransformer, TransformedTargetRegressor
 from sklearn.preprocessing import StandardScaler, OneHotEncoder
 from sklearn.impute import SimpleImputer
 from sklearn.ensemble import GradientBoostingRegressor, StackingRegressor, RandomForestRegressor
-from sklearn.linear_model import Ridge, Lasso
+from sklearn.linear_model import Ridge
 from sklearn.svm import SVR
 from sklearn.neighbors import KNeighborsRegressor
 import warnings
 from xgboost import XGBRegressor
+import numpy as np
 
 def tune_hyperparameters(X_train, y_train, numeric_features, categorical_features):
 
@@ -34,6 +35,10 @@ def tune_hyperparameters(X_train, y_train, numeric_features, categorical_feature
         ('preprocessor', preprocessor),
         ('model', Ridge()) 
     ])
+
+    full_pipeline = TransformedTargetRegressor(
+        regressor=pipeline,
+        func=np.log1p, inverse_func=np.expm1)
     
 
     param_grid = [  
@@ -101,7 +106,7 @@ def tune_hyperparameters(X_train, y_train, numeric_features, categorical_feature
     ]
     
     grid_search_cv = GridSearchCV(
-        estimator=pipeline,
+        estimator=full_pipeline,
         param_grid=param_grid,
         cv=5,
         scoring='r2',
