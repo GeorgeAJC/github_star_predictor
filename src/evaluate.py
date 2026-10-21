@@ -20,11 +20,10 @@ def run_full_evaluation(best_model, X_train, y_train, X_test, y_test, numeric_fe
             ('cat', OneHotEncoder(handle_unknown='ignore', sparse_output=False), categorical_features)
         ]
     )
-    baseline_pipeline = TransformedTargetRegressor(
-    regressor = Pipeline(steps=[
+    baseline_pipeline = Pipeline(steps=[
         ('preprocessor', baseline_preprocessor),
         ('model', Ridge(alpha=1.0))
-    ]), func=np.log1p, inverse_func=np.expm1)
+    ])
     baseline_pipeline.fit(X_train, y_train)
     baseline_r2_score = baseline_pipeline.score(X_test, y_test)
     print(f"Baseline R2 Score: {baseline_r2_score:.4f}")
