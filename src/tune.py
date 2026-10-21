@@ -104,7 +104,6 @@ def tune_hyperparameters(X_train, y_train, numeric_features, categorical_feature
             'regressor__model__learning_rate': [0.05, 0.1],       
             'regressor__model__reg_alpha': [0.5, 1.0],      
             'regressor__model__reg_lambda': [1.0, 5.0, 10.0],
-            'regressor__model__reg_gamma': [1.0, 5.0]
         }
         
     ]
