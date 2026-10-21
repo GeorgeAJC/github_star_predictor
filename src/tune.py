@@ -43,66 +43,66 @@ def tune_hyperparameters(X_train, y_train, numeric_features, categorical_feature
 
     param_grid = [  
         {
-            'preprocessor__num__scaler': [StandardScaler()],
-            'preprocessor__cat__encoder': [OneHotEncoder(handle_unknown='ignore', sparse_output=False),
+            'regressor__preprocessor__num__scaler': [StandardScaler()],
+            'regressor__preprocessor__cat__encoder': [OneHotEncoder(handle_unknown='ignore', sparse_output=False),
                 OneHotEncoder(handle_unknown='ignore', sparse_output=False, drop='first')
-            ],'model': [GradientBoostingRegressor(random_state=42)],
-            'model__n_estimators': [200, 400],
-            'model__learning_rate': [0.05, 0.1],
-            'model__max_depth': [3, 5],
-            'model__subsample': [0.8, 1.0],
-            'model__min_samples_leaf': [10, 20],
+            ],'regressor__model': [GradientBoostingRegressor(random_state=42)],
+            'regressor__model__n_estimators': [200, 400],
+            'regressor__model__learning_rate': [0.05, 0.1],
+            'regressor__model__max_depth': [3, 5],
+            'regressor__model__subsample': [0.8, 1.0],
+            'regressor__model__min_samples_leaf': [10, 20],
         },
         {
-            'preprocessor__num__scaler': [StandardScaler()],
-            'preprocessor__cat__encoder': [OneHotEncoder(handle_unknown='ignore', sparse_output=False),
+            'regressor__preprocessor__num__scaler': [StandardScaler()],
+            'regressor__preprocessor__cat__encoder': [OneHotEncoder(handle_unknown='ignore', sparse_output=False),
                 OneHotEncoder(handle_unknown='ignore', sparse_output=False, drop='first')
-            ],'model': [RandomForestRegressor(random_state=42)],
-            'model__n_estimators': [200, 400],
-            'model__max_depth': [3, 5, 10],
-            'model__min_samples_split': [10, 15, 20],
-            'model__min_samples_leaf': [10, 20]
+            ],'regressor__model': [RandomForestRegressor(random_state=42)],
+            'regressor__model__n_estimators': [200, 400],
+            'regressor__model__max_depth': [3, 5, 10],
+            'regressor__model__min_samples_split': [10, 15, 20],
+            'regressor__model__min_samples_leaf': [10, 20]
         },
         {
-            'preprocessor__num__scaler': [StandardScaler()],
-            'preprocessor__cat__encoder': [OneHotEncoder(handle_unknown='ignore', sparse_output=False),
+            'regressor__preprocessor__num__scaler': [StandardScaler()],
+            'regressor__preprocessor__cat__encoder': [OneHotEncoder(handle_unknown='ignore', sparse_output=False),
                 OneHotEncoder(handle_unknown='ignore', sparse_output=False, drop='first') 
-            ],'model': [StackingRegressor(
+            ],'regressor__model': [StackingRegressor(
                 estimators=[
                     ('ridge', Ridge()), 
                     ('svr', SVR())
                 ],final_estimator=Ridge()
             )],
-            'model__ridge__alpha': [10.0, 50.0],
-            'model__svr__C': [0.1, 1.0],
-            'model__final_estimator__alpha': [1.0, 5.0]
+            'regressor__model__ridge__alpha': [10.0, 50.0],
+            'regressor__model__svr__C': [0.1, 1.0],
+            'regressor__model__final_estimator__alpha': [1.0, 5.0]
         },
         {
-            'preprocessor__num__scaler': [StandardScaler()],
-            'preprocessor__cat__encoder': [OneHotEncoder(handle_unknown='ignore', sparse_output=False),
+            'regressor__preprocessor__num__scaler': [StandardScaler()],
+            'regressor__preprocessor__cat__encoder': [OneHotEncoder(handle_unknown='ignore', sparse_output=False),
                 OneHotEncoder(handle_unknown='ignore', sparse_output=False, drop='first')
             ],
-            'model': [StackingRegressor(
+            'regressor__model': [StackingRegressor(
                 estimators=[
                     ('rf', RandomForestRegressor(random_state=42)), 
                     ('knn', KNeighborsRegressor())
                 ],final_estimator=GradientBoostingRegressor(random_state=42)
-            )],'model__rf__n_estimators': [200, 400],
-            'model__knn__n_neighbors': [5, 10, 25],
-            'model__final_estimator__n_estimators': [100, 200]
+            )],'regressor__model__rf__n_estimators': [200, 400],
+            'regressor__model__knn__n_neighbors': [5, 10, 25],
+            'regressor__model__final_estimator__n_estimators': [100, 200]
         },
         {
-            'preprocessor__num__scaler': [StandardScaler()],
-            'preprocessor__cat__encoder': [OneHotEncoder(handle_unknown='ignore', sparse_output=False),
+            'regressor__preprocessor__num__scaler': [StandardScaler()],
+            'regressor__preprocessor__cat__encoder': [OneHotEncoder(handle_unknown='ignore', sparse_output=False),
                 OneHotEncoder(handle_unknown='ignore', sparse_output=False, drop='first')
             ],
-            'model': [XGBRegressor(random_state=42)],
-            'model__n_estimators': [200, 400],
-            'model__max_depth': [3, 5],
-            'model__subsample': [0.8, 1.0],
-            'model__learning_rate': [0.05, 0.1],       
-            'model__reg_alpha': [0.5, 1.0],      #l1
-            'model__reg_lambda': [1.0, 5.0, 10.0]   #l2
+            'regressor__model': [XGBRegressor(random_state=42)],
+            'regressor__model__n_estimators': [200, 400],
+            'regressor__model__max_depth': [3, 5],
+            'regressor__model__subsample': [0.8, 1.0],
+            'regressor__model__learning_rate': [0.05, 0.1],       
+            'regressor__model__reg_alpha': [0.5, 1.0],      #l1
+            'regressor__model__reg_lambda': [1.0, 5.0, 10.0]   #l2
         }
         
     ]
