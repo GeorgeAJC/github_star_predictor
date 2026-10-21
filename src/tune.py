@@ -58,10 +58,10 @@ def tune_hyperparameters(X_train, y_train, numeric_features, categorical_feature
             'regressor__preprocessor__cat__encoder': [OneHotEncoder(handle_unknown='ignore', sparse_output=False),
                 OneHotEncoder(handle_unknown='ignore', sparse_output=False, drop='first')
             ],'regressor__model': [RandomForestRegressor(random_state=42)],
-            'regressor__model__n_estimators': [200, 400, 600],
-            'regressor__model__max_depth': [3, 5, 10],
-            'regressor__model__min_samples_split': [10, 15, 20],
-            'regressor__model__min_samples_leaf': [10, 20, 30]
+            'regressor__model__n_estimators': [30, 50, 100, 150],
+            'regressor__model__max_depth': [10, 20, 30],
+            'regressor__model__min_samples_split': [1, 2, 4, 8],
+            'regressor__model__min_samples_leaf': [1, 2, 4, 8]
         },
         {
             'regressor__preprocessor__num__scaler': [StandardScaler()],
