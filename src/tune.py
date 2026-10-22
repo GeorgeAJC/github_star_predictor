@@ -51,7 +51,7 @@ def tune_hyperparameters(X_train, y_train, numeric_features, categorical_feature
             'regressor__model__learning_rate': [0.03, 0.05],
             'regressor__model__max_depth': [5, 7, 10],
             'regressor__model__subsample': [0.8, 1.0],
-            'regressor__model__min_samples_leaf': [5, 10, 15, 20],
+            'regressor__model__min_samples_leaf': [2, 5, 10, 15],
         },
         {
             'regressor__preprocessor__num__scaler': [StandardScaler()],
