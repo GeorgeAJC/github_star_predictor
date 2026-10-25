@@ -18,7 +18,7 @@ def fetch_repo_features(owner, repo):
     return{
         "repo_name": data["name"],
         "age_days": age_days,
-        "forks_count": data["forks_count"],
+        "forks": data["forks_count"],
         "open_issues": data["open_issues_count"],
         "size": data["size"],
         "language": data["language"],
