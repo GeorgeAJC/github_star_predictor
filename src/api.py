@@ -3,16 +3,17 @@ from wsgiref import headers
 import requests
 
 def fetch_repo_features(owner, repo):
-    url = f"https://api.github.com/repos/{owner}/{repo}"
+    url = f"https://api.github.com/repos/{owner}/{repo}" #build url
     response = requests.get(url)
     
-    if response.status_code == 200:
+    if response.status_code == 200: #check that request doesn't return an error
         data = response.json()
     else:
         return "Error fetching repo, error code: " + str(response.status_code)
 
-    creation_date = datetime.strptime(data["created_at"], "%Y-%m-%dT%H:%M:%SZ")
+    creation_date = datetime.strptime(data["created_at"], "%Y-%m-%dT%H:%M:%SZ") #build dervied feature
     age_days = (datetime.now() - creation_date).days
+
 
     return{
         "repo_name": data["name"],
@@ -38,7 +39,7 @@ def fetch_top_100_new_weekly_repos():
     if response.status_code == 200:
         items = response.json().get("items", [])
         repos = []
-        for item in items:
+        for item in items: #get features for each repo in the top 100 new weekly repos
             age_days = (datetime.now() - datetime.strptime(item["created_at"], "%Y-%m-%dT%H:%M:%SZ")).days
             repos.append({
                 "repo_name": item["full_name"],
@@ -53,6 +54,7 @@ def fetch_top_100_new_weekly_repos():
     else:
         return f"Error fetching top 100 new weekly repos, error code: {response.status_code}"
 
+#testing
 if __name__ == "__main__":
     owner = "GeorgeAJC"
     repo = "github_star_predictor"
