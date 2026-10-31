@@ -4,18 +4,21 @@ import pandas as pd
 #imports for tests
 from src.api import fetch_repo_features, fetch_top_100_new_weekly_repos
 
+#fetch best model found from training
 def load_model(model_path="models/trained_model_0.7889.pkl"):
     return joblib.load(model_path)
 
-
+#single predictions
 def predict_single_repo_stars(model, repo_data):
 
+    #convert list of repos to df for predictions
     df = pd.DataFrame([repo_data])
 
     prediction = model.predict(df)
-
+    #return star count prediction
     return int(round(prediction[0]))
 
+#batch predictions
 def predict_multiple_repos_stars(model, repos_data):
     
     df = pd.DataFrame(repos_data)
@@ -30,7 +33,7 @@ if __name__ == "__main__":
     model = load_model(model_path)
 
     #test single repo prediction
-    owner = "GeorgeAJC"
+    owner = "GeorgeAJC" 
     repo = "github_star_predictor"
     repo_data = fetch_repo_features(owner, repo)
     predicted_stars = predict_single_repo_stars(model, repo_data)
