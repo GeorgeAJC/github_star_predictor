@@ -5,6 +5,127 @@ from src.predictor import load_model, predict_single_repo_stars, predict_multipl
 
 st.set_page_config(page_title="GitHub Star Predictor", page_icon=":star:", layout="wide")
 
+#inline styling using CSS
+st.markdown("""
+    <style>
+    .stApp {
+        background-color: #F5F3FF;
+        color: #1E1B4B;
+    }
+
+    [data-testid="stRadio"] label p,
+    [data-testid="stRadio"] label span {
+        color: #1E1B4B !important;
+        font-weight: 600 !important;
+    }
+
+    [data-testid="stRadio"] input[type="radio"] {
+        accent-color: #6D5BD0 !important;
+    }
+
+    [data-testid="stRadio"] div[role="radiogroup"] {
+        background-color: #DDD6FE;
+        padding: 8px 12px;
+        border-radius: 8px;
+        border: 1px solid #6D5BD0;
+    }
+
+    [data-testid="stColumn"] {
+        background-color: #DDD6FE;
+        border-right: 2px solid #6D5BD0;
+        color: #18181B;
+    }
+
+    [data-testid="stContainer"] {
+        min-height: 800px !important;
+        height: auto !important;
+        width: auto !important;
+    }
+
+    [data-testid="stButton"] button {
+        border-radius: 8px;
+        font-weight: 600;
+        transition: all 0.2s ease-in-out;
+    }
+
+    [data-testid="stButton"] button[kind="primary"] {
+        background-color: #F59E0B;
+        color: black;
+        border: none;
+    }
+    
+    [data-testid="stButton"] button[kind="primary"]:hover {
+        background-color: #D97706;
+    }
+
+    [data-testid="stDataFrame"], 
+    [data-testid="stDataFrame"] > div {
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+        overflow-x: auto !important;
+        background-color: #DDD6FE !important;
+        border: 1px solid #6D5BD0 !important;
+        border-radius: 8px;
+        padding: 10px;
+    }
+
+    [data-testid="stDataFrame"] iframe, 
+    [data-testid="stDataFrame"] div[data-baseweb="card"] {
+        background-color: #DDD6FE !important;
+        max-width: 100% !important;
+        width: 100% !important;
+    }
+
+    [data-testid="stDataFrame"] th, 
+    [data-testid="stDataFrame"] td {
+        color: #1E1B4B !important;
+        background-color: #DDD6FE !important;
+    }
+
+    [data-testid="stMetric"] {
+        background-color: #DDD6FE;
+        padding: 16px;
+        border-radius: 10px;
+        border: 1px solid #6D5BD0;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    [data-testid="stMetricLabel"] p,
+    [data-testid="stMetricValue"] {
+        color: #1E1B4B !important; 
+    }
+
+    [data-testid="stTextInput"] input {
+        border-radius: 6px;
+        border: 1px solid #6D5BD0;
+        background-color: #F5F3FF;
+        color: #1E1B4B;
+    }
+
+    [data-testid="stTextInput"] label {
+        color: #1E1B4B;
+    }
+    
+    [data-testid="stTextInput"] input:focus {
+        border-color: #ff4b4b;
+        box-shadow: 0 0 0 1px #DDD6FE;
+    }
+
+    [data-testid="stExpander"] summary,
+    [data-testid="stExpander"] details {
+        border: 1px solid #6D5BD0;
+        border-radius: 8px;
+        background-color: #DDD6FE;
+    }
+
+    [data-testid="stAlert"],
+    [data-testid="stAlert"] p {
+        background-color: #6D5BD0;
+        border: 1px solid #1E1B4B;
+        color: #1E1B4B !important;
+    }
+    </style>
+""", unsafe_allow_html=True)
 
 selected_page = st.radio(
     "Navigation", 
@@ -96,7 +217,12 @@ elif selected_page == "About":
     st.markdown("""
         Welcome to the GitHub Star Predictor!
         This program uses machine learning models to analyze public GitHub repositories and predict their future star trajectories based off features fetched directly from GitHub using it's API.
-        
+        20,000 real repos were fetched along with their features such as language, size, forks and more in order to train the model.
+        Over 5000 combinations of single and stacked models with different hyperparamters were Cross Validated in order to find the final model.
+        It achieves an impressive 0.7889 r2 score, capturing the underlying patterns behind what drives a repositories star count. The
+        remaining 0.21 can be explained as a result of the external noise and the fact that some variables affecting a repos success are 
+        uncontrollable and unpredictable. For example, social media attention.
+
         * **Built with:** Python, Streamlit for web interface, and Scikit-Learn for ML model.
         * **Designed by:** George Churchill! 
     """)
