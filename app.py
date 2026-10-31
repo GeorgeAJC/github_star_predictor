@@ -56,3 +56,44 @@ if selected_page == "Home":
                             
                     else:
                         st.warning("Could not fetch recent repositories. Please try again shortly.")
+    with col_right:
+        with st.container(border=True):
+            st.subheader("Single Repository Lookup")
+            st.markdown("Evaluate any specific public GitHub repository.")
+            
+            owner = st.text_input("GitHub Owner / Username", "torvalds")
+            repo = st.text_input("Repository Name", "linux")
+
+            if st.button("Predict Stars for Repo", type="primary"):
+                if not owner or not repo:
+                    st.warning("Please enter both an owner and a repository name.")
+                else:
+                    with st.spinner(f"Fetching data for {owner}/{repo} from GitHub..."):
+                        repo_data = fetch_repo_features(owner, repo)
+                    
+                    if repo_data:
+                        if isinstance(repo_data, str) and repo_data.startswith("Error"):
+                            st.error(repo_data)
+                        else:
+                            model_input = {k: v for k, v in repo_data.items() if k not in ["repo_name"]}
+                            predicted_stars = predict_single_repo_stars(model, model_input)
+                            
+                            st.success(f"Repository: {owner}/{repo}")
+                            
+                            st.metric(label="Predicted Stars:", value=predicted_stars)
+
+                            
+                            with st.expander("View Extracted Features"):
+                                st.json(model_input)
+                    else:
+                        st.error("Could not find that repository. Check spelling or rate limits.")
+
+elif selected_page == "About":
+    st.title("About This App")
+    st.markdown("""
+        Welcome to the GitHub Star Predictor!
+        This program uses machine learning models to analyze public GitHub repositories and predict their future star trajectories based off features fetched directly from GitHub using it's API.
+        
+        * **Built with:** Python, Streamlit for web interface, and Scikit-Learn for ML model.
+        * **Designed by:** George Churchill! 
+    """)
