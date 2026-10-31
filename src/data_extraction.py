@@ -3,6 +3,7 @@ import time
 import requests
 import pandas as pd
 
+#building datasets for training
 def fetch_github_dataset(target_count=20000):
     url = "https://api.github.com/search/repositories"
     headers = {"Accept": "application/vnd.github+json"}
@@ -16,7 +17,8 @@ def fetch_github_dataset(target_count=20000):
     for i in range(len(date_ranges) - 1):
         if len(repos) >= target_count:
             break
-            
+
+        #convert date formats
         start_date = date_ranges[i].strftime("%Y-%m-%d")
         end_date = date_ranges[i+1].strftime("%Y-%m-%d")
         
@@ -26,7 +28,8 @@ def fetch_github_dataset(target_count=20000):
             params = {"q": query, "sort": "stars", "order": "desc", "per_page": 100, "page": page}
             
             response = requests.get(url, headers=headers, params=params)
-            
+
+            #deal with API errors
             if response.status_code == 403:  # Rate limit hit
                 print("Rate limit reached. Sleeping for 60 seconds...")
                 time.sleep(60)
@@ -38,9 +41,11 @@ def fetch_github_dataset(target_count=20000):
                 break
                 
             items = response.json().get("items", [])
+            #stop the loop if response is empty despite no API errors
             if not items:
                 break
-                
+
+            #create dictionary for each repo and append to array of repos 
             for item in items:
                 repos.append({
                     "repo_name": item["full_name"],
@@ -51,12 +56,14 @@ def fetch_github_dataset(target_count=20000):
                     "size": item["size"],
                     "language": item["language"],
                 })
-                
+
+            #stop loop if target count of repos is met    
             if len(repos) >= target_count:
                 break
                 
             page += 1
-            
+
+    #convert array to pandas dataframe, then to CSV and save to models/ with a descriptive name
     df = pd.DataFrame(repos)
     if not df.empty:
         df = df.head(target_count)
@@ -68,5 +75,6 @@ def fetch_github_dataset(target_count=20000):
         print("Repository data fetch failed.")
     return df
 
+#run function to create test data
 if __name__ == "__main__":
     fetch_github_dataset(target_count=20000)

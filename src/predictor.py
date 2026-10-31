@@ -4,7 +4,7 @@ import pandas as pd
 #imports for tests
 from src.api import fetch_repo_features, fetch_top_100_new_weekly_repos
 
-def load_model(model_path):
+def load_model(model_path="models/trained_model_0.7889.pkl"):
     return joblib.load(model_path)
 
 
