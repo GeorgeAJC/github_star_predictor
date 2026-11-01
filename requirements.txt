@@ -2,8 +2,14 @@ streamlit
 pandas 
 numpy
 scikit-learn 
-google-cloud-bigquery
 db-dtypes
 joblib
 seaborn
 matplotlib
+requests
+os
+time
+re
+datetime
+xgboost
+warnings
