@@ -2,8 +2,9 @@ import streamlit as st
 import pandas as pd
 from src.api import fetch_repo_features, fetch_top_100_new_weekly_repos
 from src.predictor import load_model, predict_single_repo_stars, predict_multiple_repos_stars
+import re
 
-st.set_page_config(page_title="GitHub Star Predictor", page_icon=":star:", layout="wide")
+st.set_page_config(page_title="GitHub Repo Star Predictor", page_icon=":star:", layout="wide")
 
 #inline styling using CSS
 st.markdown("""
@@ -127,6 +128,7 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
+#create radio buttons for navigation between home and about page
 selected_page = st.radio(
     "Navigation", 
     ["Home", "About"], 
@@ -134,34 +136,46 @@ selected_page = st.radio(
     label_visibility="collapsed" # Hides the word "Navigation" for a sleek look
 )
 
+#create 'Home' page contents
 if selected_page == "Home":
-    st.title("GitHub Star Predictor")
+    st.title("GitHub Repo Star Predictor")
 
+    #load model and cache it so the model is not reloaded on each interaction. 
     @st.cache_resource
     def fetch_model():
         return load_model()
 
+    #load model with a spinner to indicate loading
     with st.spinner("Loading machine learning model..."):
         model = fetch_model()
 
+    #create columns for layout of two home page sections;
     col_left, col_right = st.columns(2, gap="small")
 
+    #left column for batch repo predictions
     with col_left:
+            #create container for batch repo predictions
             with st.container(border=True):
                 st.subheader("Top 100 New Repos (This Week)")
                 st.markdown("Query trending repositories created over the past 7 days and run batch predictions.")
 
+                #button to start fetch and prediction
                 if st.button("Fetch & Predict Top 100", type="primary"):
+                    #fetch data with spinner while loading
                     with st.spinner("Querying GitHub Search API and running batch inference..."):
                         recent_repos = fetch_top_100_new_weekly_repos()
-                        
+
+                    #check if recent_repos returned None
                     if recent_repos:
+                        #if an error returned, show error message, else run preductions
                         if isinstance(recent_repos, str) and recent_repos.startswith("Error"):
                             st.error(recent_repos)
                         else:
+                            #remove repo_name and actual starts, add every other key, value pair of features to dictionary
                             model_inputs = [{k: v for k, v in r.items() if k not in ["repo_name", "actual_stars"]} for r in recent_repos]
-                            predicted_stars_list = predict_multiple_repos_stars(model, model_inputs)
-                            
+                            predicted_stars_list = predict_multiple_repos_stars(model, model_inputs) #predict
+
+                            #convert to dataframe
                             results = []
                             for i, r in enumerate(recent_repos):
                                 results.append({
@@ -171,47 +185,87 @@ if selected_page == "Home":
                                 })
 
                             results_df = pd.DataFrame(results)
+
+                            #make repo names urls in order to make them clickable in the dataframe
+                            results_df["Repository"] = "https://github.com/" + results_df["Repository"]
+
+                            #style df to appearnace of website
                             styled_results_df = results_df.style.set_properties(**{
                                 'background-color':'#DDD6FE',
                                 'color': '#1E1B4B',
                                 'border-color': '#6D5BD0'
                             })
-                            st.dataframe(styled_results_df, width='stretch', hide_index=True)
-                            
+                            st.dataframe(styled_results_df,
+                                        width='stretch',
+                                        hide_index=True,
+                                        column_config={
+                                            "Repository": st.column_config.LinkColumn(
+                                                label="Repository",
+                                                display_text=r"https://github.com/(.+)$",  # Regex to extract the repo name from the URL
+                                                help="Click to visit the repository on GitHub")
+                                        }
+                            )
                     else:
                         st.warning("Could not fetch recent repositories. Please try again shortly.")
+    #right column for singhle repo predictions
     with col_right:
         with st.container(border=True):
             st.subheader("Single Repository Lookup")
-            st.markdown("Evaluate any specific public GitHub repository.")
-            
-            owner = st.text_input("GitHub Owner / Username", "torvalds")
-            repo = st.text_input("Repository Name", "linux")
+            st.markdown("Evaluate any specific public GitHub repository." \
+            "Enter the owner and repository name, or a full GitHub repository URL to fetch features and predict stars." \
+            "If you enter both a URL and owner/repo, the URL will be used.")
+
+            #add text inputs for owner username and repo name and default value.
+            owner = st.text_input("GitHub Owner / Username", "GeorgeAJC")
+            repo = st.text_input("Repository Name", "github_star_predictor")
+            #add text input so a url can be inputted
+            repo_url = st.text_input("Or enter a full GitHub repository URL", "")
 
             if st.button("Predict Stars for Repo", type="primary"):
-                if not owner or not repo:
-                    st.warning("Please enter both an owner and a repository name.")
+                #error if both owner and repo arent entered
+                if not(owner and repo) and not repo_url:
+                    st.warning("Please enter both an owner and a repository name, or a full GitHub repository URL.")
                 else:
                     with st.spinner(f"Fetching data for {owner}/{repo} from GitHub..."):
-                        repo_data = fetch_repo_features(owner, repo)
+                        #get repo name and owner from url if entered
+                        if repo_url:
+                            match = re.search(r"github.com/([^/]+)/([^/]+)$", repo_url)
+                            if match:
+                                owner = match.group(1)
+                                repo = match.group(2)
+                                repo_data = fetch_repo_features(owner, repo)   
+                            else:
+                                st.error("Invalid GitHub repository URL. Please enter a valid URL.")
+                                repo_data = None
+                        elif owner and repo:
+                            repo_data = fetch_repo_features(owner, repo)
+                        else:
+                            st.error("Please enter both a valid owner and a repository name, or a valid full GitHub repository URL.")
+                            repo_data = None
                     
                     if repo_data:
+                        #error handling as in batch repo predictions
                         if isinstance(repo_data, str) and repo_data.startswith("Error"):
                             st.error(repo_data)
                         else:
                             model_input = {k: v for k, v in repo_data.items() if k not in ["repo_name"]}
                             predicted_stars = predict_single_repo_stars(model, model_input)
-                            
-                            st.success(f"Repository: {owner}/{repo}")
-                            
+
+                            #show repo fetched in success message
+                            repo_name = f"{owner}/{repo}"
+                            repo_url = f"https://github.com/{repo_name}"
+                            st.success(f"Repository: [{repo_name}]({repo_url})")
+
+                            #show prediction
                             st.metric(label="Predicted Stars:", value=predicted_stars)
 
-                            
+                            #show the extracted features in expander
                             with st.expander("View Extracted Features"):
                                 st.json(model_input)
                     else:
                         st.error("Could not find that repository. Check spelling or rate limits.")
 
+#about page, title and text
 elif selected_page == "About":
     st.title("About This App")
     st.markdown("""
@@ -219,7 +273,7 @@ elif selected_page == "About":
         This program uses machine learning models to analyze public GitHub repositories and predict their future star trajectories based off features fetched directly from GitHub using it's API.
         20,000 real repos were fetched along with their features such as language, size, forks and more in order to train the model.
         Over 5000 combinations of single and stacked models with different hyperparamters were Cross Validated in order to find the final model.
-        It achieves an impressive 0.7889 r2 score, capturing the underlying patterns behind what drives a repositories star count. The
+        It achieves an impressive 0.7889 r2 score, capturing the underlying patterns behind what drives a repositories star count and sucess. The
         remaining 0.21 can be explained as a result of the external noise and the fact that some variables affecting a repos success are 
         uncontrollable and unpredictable. For example, social media attention.
 
